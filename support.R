@@ -4,6 +4,9 @@ get_data <- function(num){
   Argument to jednoelementowy wektor typu character postaci RokMiesiąc,
   np. '201405' (dane z maja 2014 r.)."
   stopifnot(length(num)==1)
+  if(!dir.exists("./data")){
+    dir.create("./data")
+  }
   name <- paste(num, "-citibike-tripdata", sep="")
   if (as.integer(substr(num, 1, 4)) < 2015){
     d <- c(substr(num, 1, 4), substr(num, 5, 6))
