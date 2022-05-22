@@ -1,4 +1,9 @@
 get_data <- function(num){
+  "Funkcja wczytuje z pliku ramkę danych. Plik powinien znajdować się w folderze
+  data w katalogu projektu. Jeśli plik nie istnieje, zostaje automatycznie pobrany.
+  Argument to jednoelementowy wektor typu character postaci RokMiesiąc,
+  np. '201405' (dane z maja 2014 r.)."
+  stopifnot(length(num)==1)
   name <- paste(num, "-citibike-tripdata", sep="")
   if (as.integer(substr(num, 1, 4)) < 2015){
     d <- c(substr(num, 1, 4), substr(num, 5, 6))
