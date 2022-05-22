@@ -1,3 +1,5 @@
+# obliczenia dotyczące liczby wypożyczonych rowerów w weekend i w dniach roboczych
+
 source("support.R")
 
 
