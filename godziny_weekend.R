@@ -18,45 +18,49 @@ godziny_weekend <- function(frame, weekend){
   return(frame)
 }
 
-x <- data.frame()
-y <- data.frame()
+weekend_true <- data.frame()
+weekend_false <- data.frame()
 i <- 0
-cat("0%")
+cat("0%")   # progress bar
+
 for (m in c("05", "06", "07")) {
   name = paste("2014", m, sep="")
   d <- get_data(name)
-  d[,"starthour"] <- substr(d$starttime, 12, 13)
-  d[,"weekday"] <- strftime(as.Date(d$starttime), format="%u")
+  
+  d[,"starthour"] <- substr(d$starttime, 12, 13)              # zamiana daty wykonana tylko raz przed wejściem do funkcji
+  d[,"weekday"] <- strftime(as.Date(d$starttime), format="%u")    # bo jest czasochłonna, a funkcję wywołujemy 2-krotnie
   d[,"starttime"] <- substr(d$starttime, 1, 10)
+  
   m_data1 <- godziny_weekend(d, weekend = TRUE)
   m_data2 <- godziny_weekend(d, weekend = FALSE)
-  x <- merge(x, m_data1, all=TRUE)
-  y <- merge(y, m_data2, all=TRUE)
+  weekend_true <- merge(weekend_true, m_data1, all=TRUE)
+  weekend_false <- merge(weekend_false, m_data2, all=TRUE)
+  
   i <- i+1
-  cat(sprintf("\r%.2f%%", i*100/3))  # progress
+  cat(sprintf("\r%.2f%%", i*100/3))  # progress bar
 }
-x <- aggregate(x$x, x[,"starthour", drop=FALSE], mean)
-y <- aggregate(y$x, y[,"starthour", drop=FALSE], mean)
+weekend_true <- aggregate(weekend_true$x, weekend_true[,"starthour", drop=FALSE], mean)
+weekend_false <- aggregate(weekend_false$x, weekend_false[,"starthour", drop=FALSE], mean)
 
 png()
 par(mfrow=c(2, 1))
 
 barplot(
-  x$x,
+  weekend_true$x,
   main = "Ruch rowerowy w weekend",
   ylim = c(0, 3500),
   xlab = "godzina",
   ylab = "średnia liczba rowerzystów",
-  names.arg = x$starthour,
+  names.arg = weekend_true$starthour,
   col = terrain.colors(24)
   )
 barplot(
-  y$x,
+  weekend_false$x,
   main = "Ruch rowerowy w dniach roboczych",
   ylim = c(0, 3500),
   xlab = "godzina",
   ylab = "średnia liczba rowerzystów",
-  names.arg = y$starthour,
+  names.arg = weekend_false$starthour,
   col = terrain.colors(24)
   )
 
