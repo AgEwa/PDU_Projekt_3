@@ -3,8 +3,10 @@ library(dplyr)
 
 # Reaalizuje zapytanie
 
-x <- data.frame()
-y<- data.frame()
+x <- data.frame(integer(1),"")
+names(x)<-c("tripduration","starttime")
+y <- data.frame(integer(1),"")
+names(y)<-c("Trip.Duration","Start.Time")
 i <- 0
 cat("0%")
 # wczytuje, wybiera i skleja dane
@@ -19,6 +21,8 @@ for (m in c("05", "06", "07")) {
   i <- i+1
   cat(sprintf("\r%.2f%%", i*100/3))  # progress
 }
+x %>%
+  filter(tripduration>60)->x
 # zmiana formatu daty
 x$starttime <- format(as.Date(x$starttime, format = "%m/%d/%Y %H:%M:%S"), "%Y-%m-%d")
 # grupowanie po datach i liczenie śrredniego czasu wycieczki
@@ -26,6 +30,8 @@ x %>%
   group_by(starttime)%>%
   summarise(Mean = mean(tripduration))->x
 
+y %>%
+  filter(Trip.Duration>60)->y
 # to samo
 y$Start.Time <- format(as.Date(y$Start.Time, format = "%Y-%m-%d %H:%M:%S"), "%Y-%m-%d")
 y %>%
@@ -34,14 +40,14 @@ y %>%
 
 # funkcja wywoływana z zwenątrz, dostaje czy Nowy Jork i zakres dat (maj nie działa??)
 # filtruje dane i rysuje wykres
-getThePlot<-function(NYC, mini = as.Date("2016-05-01"), maxi = as.Date("2016-07-31")){
+getThePlot<-function(NYC, mini, maxi){
   if(NYC){
     x %>%
       filter(starttime>=mini & starttime<=maxi)->a
     barplot(
       a$Mean,
       main = "średnia długość wypożyczenia dla dnia",
-      ylim = c(0, 2500),
+      #ylim = c(0, 2500),
       xlab = "data",
       ylab = "średni czas",
       names.arg = a$starttime,
@@ -54,7 +60,7 @@ getThePlot<-function(NYC, mini = as.Date("2016-05-01"), maxi = as.Date("2016-07-
     barplot(
       a$Mean,
       main = "średnia długość wypożyczenia dla dnia",
-      ylim = c(0, 2500),
+      #ylim = c(0, 2500),
       xlab = "data",
       ylab = "średni czas",
       names.arg = a$Start.Time,
