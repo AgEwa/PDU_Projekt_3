@@ -1,7 +1,7 @@
 source("../support.R")
 library(dplyr)
 
-# Reaalizuje zapytanie
+# Skrypt reaalizuje zapytanie do wyświetlenia interaktywnego
 
 x <- data.frame(integer(1),"")
 names(x)<-c("tripduration","starttime")
@@ -28,7 +28,7 @@ x$starttime <- format(as.Date(x$starttime, format = "%m/%d/%Y %H:%M:%S"), "%Y-%m
 # grupowanie po datach i liczenie śrredniego czasu wycieczki
 x %>%
   group_by(starttime)%>%
-  summarise(Mean = mean(tripduration))->x
+  summarise(Mean = mean(tripduration), Mediana = median(tripduration))->x
 
 y %>%
   filter(Trip.Duration>60)->y
@@ -36,37 +36,48 @@ y %>%
 y$Start.Time <- format(as.Date(y$Start.Time, format = "%Y-%m-%d %H:%M:%S"), "%Y-%m-%d")
 y %>%
   group_by(Start.Time)%>%
-  summarise(Mean = mean(Trip.Duration))->y
+  summarise(Mean = mean(Trip.Duration), Mediana = median(Trip.Duration))->y
 
-# funkcja wywoływana z zwenątrz, dostaje czy Nowy Jork i zakres dat (maj nie działa??)
+# funkcja wywoływana z zwenątrz, dostaje czy Nowy Jork i zakres dat
 # filtruje dane i rysuje wykres
 getThePlot<-function(NYC, mini, maxi){
+  par(mar=c(5, 4, 4, 8), xpd=TRUE)
   if(NYC){
     x %>%
       filter(starttime>=mini & starttime<=maxi)->a
+    #a<-x
     barplot(
-      a$Mean,
-      main = "średnia długość wypożyczenia dla dnia",
+      t(as.matrix(a[,2:3])),
+      beside = T,
+      main = enc2utf8("Average length of a bike rental for the day in given data range"),
       #ylim = c(0, 2500),
-      xlab = "data",
-      ylab = "średni czas",
-      names.arg = a$starttime,
-      col = terrain.colors(24)
+      xlab = "Date",
+      ylab = enc2utf8("Avarage trip time"),
+      names.arg = c(a$starttime,a$starttime),
+      col = c("blue", "gray")
     )
+    
   }
   else{
     y %>%
       filter(Start.Time>=mini & Start.Time<=maxi)->a
+    #a<-y
+    #mini<-as.numeric(as.Date("2016-05-01"))
+    #maxi<-as.numeric(as.Date("2016-05-07"))
     barplot(
-      a$Mean,
-      main = "średnia długość wypożyczenia dla dnia",
+      t(as.matrix(a[,2:3])),
+      beside = T,
+      main = "Average length of a bike rental for the day in given data range",
       #ylim = c(0, 2500),
-      xlab = "data",
-      ylab = "średni czas",
-      names.arg = a$Start.Time,
-      col = terrain.colors(24)
+      xlab = "Date",
+      ylab = "Avarage trip time",
+      names.arg = c(a$Start.Time, a$Start.Time),
+      #xlim = c(0,maxi-mini),
+      col = c("blue", "gray")
     )
+    
   }
+  legend("topright", legend=c("mean","median"), title="Legend", fill = c("blue", "gray"), inset=c(-0.1, 0))
 }
 
 

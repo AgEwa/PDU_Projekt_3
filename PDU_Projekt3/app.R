@@ -1,22 +1,17 @@
-# Load packages ----
 library(shiny)
 
-
-# Load data ----
-#counties <- readRDS("data/counties.rds")
-
-# Source helper functions -----
+# Wczytuję plik realizujący zapytanie
 source("helpers.R")
 
-# User interface ----
+# User interface
 ui <- fluidPage(
-  titlePanel("Zapytanie"),
+  titlePanel("Trip times statistics"),
   
   # rozpisany wygląd aplikacji
   
   sidebarLayout(
     sidebarPanel(
-      helpText("Realizuje zapytanie, dni: 0- 1 maja, 91 - 31 lipca"),
+      helpText("Performs query about the average and median travel time for a day from a given date range and a selected city"),
       
       selectInput("var", 
                   label = "Choose a city to display",
@@ -31,11 +26,6 @@ ui <- fluidPage(
                      max    = "2016-07-31",
                      format = "mm/dd/yy",
                      separator = " - "),
-      
-      
-      #sliderInput("range", 
-       #           label = "Range of interest of days:",
-        #          min = 0, max = 91, value = c(20,40))
     ),
     
     mainPanel(plotOutput("map"))
@@ -48,9 +38,6 @@ server <- function(input, output) {
     NYC <- switch(input$var,
                    "New York" = T,
                    "New Jersy" = F)
-    
-    #args$min <- input$datarange3[1]
-    #args$max <- input$datarange3[2]
     
     do.call(getThePlot, list(NYC,input$range[1], input$range[2]))
   })
