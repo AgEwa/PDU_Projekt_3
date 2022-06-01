@@ -10,7 +10,7 @@ cat("0%")
  odpowiednich kolumn scala wszytkie miesiące w jedną ramkę danych x
   "
 for (m in c("05", "06", "07")) {
-  name = paste("2014", m, sep="")
+  name = paste("2016", m, sep="")
   d <- get_data(name)
   d %>% 
     filter(start.station.id != end.station.id) %>%
@@ -21,7 +21,9 @@ for (m in c("05", "06", "07")) {
 }
 "
  a - zawiera informacje o stacjach i ilokrotnie trasa została przebyta
- b - zawiera informacje o długości podróży dla najpopularniejszej trasy (pobranej z a)
+ b - zawiera informacje o długości podróży dla najpopularniejszej trasy (pobranej z a) posortowane malejąco
+ c - zawiera informacje o długości podróży dla najpopularniejszej trasy (pobranej z a) posortowane rosnąco
+ d - zawiera informacje o średniej i medianie czasu podróży dla najpopularniejszej trasy (pobranej z a)
   "
 
 x %>%
@@ -31,5 +33,19 @@ names(a)<-c("start.station.id", "start.station.name", "end.station.id", "end.sta
 head(a)
 x %>%
   filter(start.station.id == a[1,1] & end.station.id == a[1,3])%>%
-  arrange(tripduration)->b
+  arrange(desc(tripduration))->b
 head(b)
+x %>%
+  filter(start.station.id == a[1,1] & end.station.id == a[1,3])%>%
+  arrange(tripduration)->c
+head(c)
+
+x %>%
+  filter(start.station.id == a[1,1] & end.station.id == a[1,3])%>%
+  summarise(Mean = mean(tripduration), Mediana = median(tripduration))->d
+head(d)
+
+#x %>%
+#  filter(start.station.id == a[1,1] & end.station.id == a[1,3])-> x
+
+
