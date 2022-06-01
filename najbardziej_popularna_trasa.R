@@ -6,7 +6,7 @@ x <- data.frame()
 i <- 0
 cat("0%")
 "
- blok z forem wczytuje po kolei dane z 3 miesięcy 2014 roku i po odrzuceniu wierszy z początkową i końcową stacją tą samą oraz wybraniu
+ blok z forem wczytuje po kolei dane z 3 miesięcy 2016 roku i po odrzuceniu wierszy z początkową i końcową stacją tą samą oraz wybraniu
  odpowiednich kolumn scala wszytkie miesiące w jedną ramkę danych x
   "
 for (m in c("05", "06", "07")) {
@@ -32,20 +32,15 @@ x %>%
 names(a)<-c("start.station.id", "start.station.name", "end.station.id", "end.station.name", "popularity")
 head(a)
 x %>%
-  filter(start.station.id == a[1,1] & end.station.id == a[1,3])%>%
+  filter(start.station.id == a[1,1] & end.station.id == a[1,3])->x
+x%>%
   arrange(desc(tripduration))->b
 head(b)
 x %>%
-  filter(start.station.id == a[1,1] & end.station.id == a[1,3])%>%
   arrange(tripduration)->c
 head(c)
 
 x %>%
-  filter(start.station.id == a[1,1] & end.station.id == a[1,3])%>%
   summarise(Mean = mean(tripduration), Mediana = median(tripduration))->d
 head(d)
-
-#x %>%
-#  filter(start.station.id == a[1,1] & end.station.id == a[1,3])-> x
-
 
