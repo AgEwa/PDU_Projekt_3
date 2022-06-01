@@ -45,12 +45,10 @@ getThePlot<-function(NYC, mini, maxi){
   if(NYC){
     x %>%
       filter(starttime>=mini & starttime<=maxi)->a
-    #a<-x
     barplot(
       t(as.matrix(a[,2:3])),
       beside = T,
       main = enc2utf8("Average length of a bike rental for the day in given data range"),
-      #ylim = c(0, 2500),
       xlab = "Date",
       ylab = enc2utf8("Avarage trip time"),
       names.arg = c(a$starttime,a$starttime),
@@ -61,18 +59,13 @@ getThePlot<-function(NYC, mini, maxi){
   else{
     y %>%
       filter(Start.Time>=mini & Start.Time<=maxi)->a
-    #a<-y
-    #mini<-as.numeric(as.Date("2016-05-01"))
-    #maxi<-as.numeric(as.Date("2016-05-07"))
     barplot(
       t(as.matrix(a[,2:3])),
       beside = T,
       main = "Average length of a bike rental for the day in given data range",
-      #ylim = c(0, 2500),
       xlab = "Date",
       ylab = "Avarage trip time",
       names.arg = c(a$Start.Time, a$Start.Time),
-      #xlim = c(0,maxi-mini),
       col = c("blue", "gray")
     )
     
